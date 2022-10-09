@@ -62,7 +62,7 @@ exports.registerUser = async (req, res) => {
       return res.json({error_code: 0, message: "Congratulations! User Successfully Logged in", data: {token: token, first_name: user.first_name,last_name: user.last_name, user_id: user.id}})
 
   }else{
-      return res.status(404).json({error_code: -1, message:"Incorrect Password"})
+      return res.status(404).json({error_code: -1, message:"Invalid username or password"})
   }
 };
 

@@ -7,7 +7,7 @@ const app = express();
 
 // //cors
 var corsOptions = {
-    origin: "http://localhost:4002"
+    origin: "http://localhost:3000"
   };
 
   app.use(cors(corsOptions));
@@ -33,6 +33,8 @@ app.get("/", (req, res) => {
 });
 
 require("./routes/user_auth.routes")(app);
+require("./routes/admin/skills.routes")(app);
+
 
 // set port, listen for requests
 const PORT = 4002;

@@ -20,5 +20,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.user_auth = require("./userAuth.models.js")(sequelize, Sequelize);
+db.add_skill = require("./admin/addSkills.models.js")(sequelize, Sequelize);
+
 
 module.exports = db;
