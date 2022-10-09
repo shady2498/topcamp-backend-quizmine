@@ -27,7 +27,7 @@ exports.registerUser = async (req, res) => {
     // Save Tutorial in the database
     UserAuth.create(user_info)
       .then(data => {
-        res.send(data);
+        res.send({error_code: 0 , message: "Congratulations! You've successfully signed up"});
       }).catch(err => {
         if(err.parent.errno === 1062){
           res.status(500).send({error_code:-1, message: "Email Already exists!"})
