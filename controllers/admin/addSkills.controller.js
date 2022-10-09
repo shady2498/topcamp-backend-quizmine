@@ -52,13 +52,15 @@ exports.addSkill = async (req, res) => {
   };
 
 exports.updateSkill = async (req,res) => {
-    const id = req.params.id;
+    const id = parseInt(req.params.id);
     const params = req.body;
+    console.log("this is id", id, req.body)
 
     Skill.update(params, {
       where: { id: id }
     })
       .then(num => {
+        console.log("num", num)
         if (num == 1) {
           res.send({
             message: "Skill was updated successfully."
@@ -77,4 +79,66 @@ exports.updateSkill = async (req,res) => {
 }
 
 
+exports.deleteSkill = (req, res) => {
+    const id = req.params.id;
+    const params = req.body
+  
+    Skill.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Skill was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Skill with id=${id}. Maybe Skill was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Skill with id=" + id
+        });
+      });
+  };
 
+
+
+  exports.getAllSkills = (req, res) => {
+    const title = req.query.title;
+  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+
+  Skill.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials."
+      });
+    });
+  };
+
+
+  exports.getSkill = (req, res) => {
+    const id = req.params.id;
+
+    Skill.findByPk(id)
+      .then(data => {
+        if (data) {
+          res.send(data);
+        } else {
+          res.status(404).send({
+            message: `Cannot find Tutorial with id=${id}.`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error retrieving Tutorial with id=" + id
+        });
+      });
+  };

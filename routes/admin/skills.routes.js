@@ -5,7 +5,13 @@ module.exports = app => {
   
     //add skill route
     router.post("/addskill", user_route.addSkill);
-    router.post("/updateSkill", user_route.addSkill);
+    router.put("/updateSkill/:id", user_route.updateSkill);
+    router.delete("/deleteSkill/:id", user_route.deleteSkill);
+    router.get("/", user_route.getAllSkills);
+    router.get("/:id", user_route.getSkill);
+
+
+
 
 
     app.use('/api/skill', router);
