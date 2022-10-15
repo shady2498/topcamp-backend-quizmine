@@ -4,6 +4,7 @@ const Skill = db.add_skill;
 const jwt = require("jsonwebtoken");
 const Op = db.Sequelize.Op;
 
+
 //jwt
 const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
 

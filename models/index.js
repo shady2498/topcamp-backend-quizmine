@@ -21,6 +21,14 @@ db.sequelize = sequelize;
 
 db.user_auth = require("./userAuth.models.js")(sequelize, Sequelize);
 db.add_skill = require("./admin/addSkills.models.js")(sequelize, Sequelize);
+db.add_mcqs = require("./admin/addMcqs.models")(sequelize, Sequelize);
+
+
+
+//associations
+db.add_skill.hasMany(db.add_mcqs, {foreignKey: "skill_id"});
+db.add_mcqs.belongsTo(db.add_skill, {foreignKey: "skill_id"});
+
 
 
 module.exports = db;
