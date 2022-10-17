@@ -3,48 +3,49 @@ const db = require("../../models");
 const Skill = db.add_skill;
 const jwt = require("jsonwebtoken");
 const Op = db.Sequelize.Op;
+const helpers = require("../../helpers/helper.functions");
+const SECRET = require("../../data/global.data")
 
-
-//jwt
 const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
+
 
 // Create and Save a new skill
 exports.addSkill = async (req, res) => {
 
     console.log("this is skill data", req.body);
 
-        if (!req.body) {
-      res.status(400).send({error_code: -1, message: "Content can not be empty!"});
-      return;
+  
+    let is_body = await helpers.isBodyPresent(req.body)
+    if(is_body === "Content cannot be empty"){
+      return res.status(400).send({error_code: -1, message: "Content can not be empty!"})
     }
 
-    const {jwt_sign} = req.headers;
+    // const {jwt_sign} = req.headers;
     const params = req.body;
 
-    console.log("params",params)
+    // console.log("params",params, jwt_sign, JWT_SECRET)
  
 
     try {
-        const user = await jwt.verify(jwt_sign, JWT_SECRET);
-
-        const skill = await Skills.findOne({where: {class: params.class, subject: params.subject}, chapter: params.chapter})
+     
+        // const user = await jwt.verify(jwt_sign, JWT_SECRET);
+        // console.log("try", (user))
+        const skill = await Skill.findOne({where: {class: params.class, subject: params.subject, chapter: params.chapter} })
+    
         if(skill){
-          res.send({error_code:-1, message: "Skill already exists!"})
+          res.send({error_code:-1, message: "Skill already exists!"});
+          return;
         }
 
         // Save skill in db
         Skill.create(params)
         .then(data => {
+          console.log(data)
             res.send({error_code: 0 , message: "Skill Successfully added"});
         }).catch(err => {
-            if(err.parent.errno === 1062){
-                res.send({error_code:-1, message: "Skill already exists!"})
-            }else{
             res.status(500).send({error_code:-1,message:
                 err.message || "Some error occurred while creating the User."
             });
-            }
-        
           });
         // res.json({error_code: 0, message: "Success"});
 

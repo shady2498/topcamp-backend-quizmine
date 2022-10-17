@@ -26,8 +26,8 @@ db.add_mcqs = require("./admin/addMcqs.models")(sequelize, Sequelize);
 
 
 //associations
-db.add_skill.hasMany(db.add_mcqs, {foreignKey: "skill_id"});
-db.add_mcqs.belongsTo(db.add_skill, {foreignKey: "skill_id"});
+db.add_skill.hasMany(db.add_mcqs, {foreignKey: "skill_id", onUpdate: 'RESTRICT'});
+db.add_mcqs.belongsTo(db.add_skill, {foreignKey: "skill_id", onUpdate: 'RESTRICT'});
 
 
 

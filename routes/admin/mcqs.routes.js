@@ -5,10 +5,10 @@ module.exports = app => {
   
     //add skill route
     router.post("/addmcq", mcqs.addMcqs);
-    router.put("/updateSkill/:id", mcqs.updateSkill);
-    // router.delete("/deleteSkill/:id", mcqs.deleteSkill);
-    // router.get("/", mcqs.getAllSkills);
-    // router.get("/:id", mcqs.getSkill);
+    router.put("/updateMcqs/:id", mcqs.updateMcqs);
+    router.delete("/deleteMcqs/:id", mcqs.deleteMcq);
+    router.get("/", mcqs.getAllMcqs);
+    router.get("/:id", mcqs.getMcq);
 
 
 

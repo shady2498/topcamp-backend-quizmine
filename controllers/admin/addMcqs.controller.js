@@ -1,12 +1,13 @@
 
 const db = require("../../models");
-const helpers = require("../../helpers/helper.functions")
+const helpers = require("../../helpers/helper.functions");
 const Mcqs = db.add_mcqs;
 const Skills = db.add_skill;
 const jwt = require("jsonwebtoken");
 const Op = db.Sequelize.Op;
-// const { QueryTypes } = require('sequelize');
-// const users = await sequelize.query("SELECT * FROM `users`", { type: QueryTypes.SELECT });
+const { QueryTypes } = require('sequelize');
+const Sequelize = require('sequelize');
+const { sequelize } = require("../../models");
 //jwt
 const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
 
@@ -65,12 +66,21 @@ exports.addMcqs = async (req, res) => {
 
   };
 
-exports.updateSkill = async (req,res) => {
+exports.updateMcqs = async (req,res) => {
     const id = parseInt(req.params.id);
     const params = req.body;
-    console.log("this is id", id, req.body)
+    // console.log("this is id", id, req.body);
 
-    Skill.update(params, {
+    const params_final = {
+      statement: params.statement,
+      options: JSON.stringify(params.options),
+      correct_option: params.correct_option,
+    }
+
+const [results, metadata] = await sequelize.query("SELECT * from mcqs where id=2");
+
+
+    Mcqs.update(params_final, {
       where: { id: id }
     })
       .then(num => {
@@ -93,66 +103,66 @@ exports.updateSkill = async (req,res) => {
 }
 
 
-// exports.deleteSkill = (req, res) => {
-//     const id = req.params.id;
-//     const params = req.body
+exports.deleteMcq = (req, res) => {
+    const id = req.params.id;
+    const params = req.body
   
-//     Skill.destroy({
-//       where: { id: id }
-//     })
-//       .then(num => {
-//         if (num == 1) {
-//           res.send({
-//             message: "Skill was deleted successfully!"
-//           });
-//         } else {
-//           res.send({
-//             message: `Cannot delete Skill with id=${id}. Maybe Skill was not found!`
-//           });
-//         }
-//       })
-//       .catch(err => {
-//         res.status(500).send({
-//           message: "Could not delete Skill with id=" + id
-//         });
-//       });
-//   };
+    Mcqs.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Mcqs was deleted successfully!"
+          });
+        } else {
+          res.send({
+            message: `Cannot delete Mcqs with id=${id}. Maybe Mcqs was not found!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Could not delete Mcqs with id=" + id
+        });
+      });
+  };
 
 
 
-//   exports.getAllSkills = (req, res) => {
-//     const title = req.query.title;
-//   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  exports.getAllMcqs = (req, res) => {
+    const title = req.query.title;
+  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
 
-//   Skill.findAll({ where: condition })
-//     .then(data => {
-//       res.send(data);
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message:
-//           err.message || "Some error occurred while retrieving tutorials."
-//       });
-//     });
-//   };
+  Mcqs.findAll({ where: condition })
+    .then(data => {
+      res.send(data);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving tutorials."
+      });
+    });
+  };
 
 
-//   exports.getSkill = (req, res) => {
-//     const id = req.params.id;
+  exports.getMcq = (req, res) => {
+    const id = req.params.id;
 
-//     Skill.findByPk(id)
-//       .then(data => {
-//         if (data) {
-//           res.send(data);
-//         } else {
-//           res.status(404).send({
-//             message: `Cannot find Tutorial with id=${id}.`
-//           });
-//         }
-//       })
-//       .catch(err => {
-//         res.status(500).send({
-//           message: "Error retrieving Tutorial with id=" + id
-//         });
-//       });
-//   };
+    Mcqs.findByPk(id)
+      .then(data => {
+        if (data) {
+          res.send(data);
+        } else {
+          res.status(404).send({
+            message: `Cannot find Tutorial with id=${id}.`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error retrieving Tutorial with id=" + id
+        });
+      });
+  };

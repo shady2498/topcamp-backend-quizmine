@@ -1,19 +1,19 @@
 const db = require("../models");
+const helpers = require("../helpers/helper.functions");
 const UserAuth = db.user_auth;
 const bcrypt  = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Op = db.Sequelize.Op;
+const SECRET = require("../data/global.data")
 
 //jwt
-const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
+// const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
 
-// Create and Save a new Tutorial
 exports.registerUser = async (req, res) => {
 
-    if (!req.body) {
-      res.status(400).send({error_code: -1, message: "Content can not be empty!"});
-      return;
-    }
+  let is_body = await helpers.isBodyPresent(req.body)
+  if(is_body === "Content cannot be empty"){
+    return res.status(400).send({error_code: -1, message: "Content can not be empty!"})
+  }
 
     const password =  await bcrypt.hash(req.body.password, 10);
 
@@ -21,16 +21,16 @@ exports.registerUser = async (req, res) => {
       first_name: req.body.first_name,
       last_name: req.body.last_name,
       email: req.body.email,
-      password: password
+      password: password,
+      class: req.body.class,
     };
   
-    // Save Tutorial in the database
     UserAuth.create(user_info)
       .then(data => {
         res.send({error_code: 0 , message: "Congratulations! You've successfully signed up"});
       }).catch(err => {
-        if(err.parent.errno === 1062){
-          res.status(500).send({error_code:-1, message: "Email Already exists!"})
+        if(err){
+          res.status(500).send({error_code:-1, message: "Email Already exists!", error: err})
         }else{
           res.status(500).send({error_code:-1,message:
               err.message || "Some error occurred while creating the User."
@@ -44,11 +44,15 @@ exports.registerUser = async (req, res) => {
 
   exports.loginUser = async(req, res) => {
  
+    let is_body = await helpers.isBodyPresent(req.body)
+    if(is_body === "Content cannot be empty"){
+      return res.status(400).send({error_code: -1, message: "Content can not be empty!"})
+    }
 
     const user = await UserAuth.findOne({ where: { email: req.body.email } });
-    console.log(user)
+   
     if(!user){
-        return res.status(404).json({ error: "Invalid username or password"})
+        return res.status(404).json({ error: "Sorry! There is no registered user with this email"})
     }
 
     if(await bcrypt.compare(req.body.password, user.password)){
@@ -58,7 +62,7 @@ exports.registerUser = async (req, res) => {
           first_name: user.first_name,
           last_name: user.last_name,
           email: user.email
-      }, JWT_SECRET)
+      }, SECRET)
       return res.json({error_code: 0, message: "Congratulations! User Successfully Logged in", data: {token: token, first_name: user.first_name,last_name: user.last_name, user_id: user.id}})
 
   }else{
