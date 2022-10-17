@@ -27,6 +27,11 @@ exports.addSkill = async (req, res) => {
     try {
         const user = await jwt.verify(jwt_sign, JWT_SECRET);
 
+        const skill = await Skills.findOne({where: {class: params.class, subject: params.subject}, chapter: params.chapter})
+        if(skill){
+          res.send({error_code:-1, message: "Skill already exists!"})
+        }
+
         // Save skill in db
         Skill.create(params)
         .then(data => {

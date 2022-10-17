@@ -54,7 +54,7 @@ exports.addMcqs = async (req, res) => {
             }
         
           });
-        // res.json({error_code: 0, message: "Success"});
+
 
     }
     catch (error){
@@ -65,32 +65,32 @@ exports.addMcqs = async (req, res) => {
 
   };
 
-// exports.updateSkill = async (req,res) => {
-//     const id = parseInt(req.params.id);
-//     const params = req.body;
-//     console.log("this is id", id, req.body)
+exports.updateSkill = async (req,res) => {
+    const id = parseInt(req.params.id);
+    const params = req.body;
+    console.log("this is id", id, req.body)
 
-//     Skill.update(params, {
-//       where: { id: id }
-//     })
-//       .then(num => {
-//         console.log("num", num)
-//         if (num == 1) {
-//           res.send({
-//             message: "Skill was updated successfully."
-//           });
-//         } else {
-//           res.send({
-//             message: `Cannot update Skill with id=${id}. Maybe Skill was not found or req.body is empty!`
-//           });
-//         }
-//       })
-//       .catch(err => {
-//         res.status(500).send({
-//           message: "Error updating Skill with id=" + id
-//         });
-//       });
-// }
+    Skill.update(params, {
+      where: { id: id }
+    })
+      .then(num => {
+        console.log("num", num)
+        if (num == 1) {
+          res.send({
+            message: "MCQ was updated successfully."
+          });
+        } else {
+          res.send({
+            message: `Cannot update MCQ with id=${id}. Maybe MCQ was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: "Error updating MCQ with id=" + id
+        });
+      });
+}
 
 
 // exports.deleteSkill = (req, res) => {

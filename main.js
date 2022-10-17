@@ -19,8 +19,8 @@ var corsOptions = {
   // db.sequelize.sync().then(() => {
   //   console.log("Drop and re-sync db.");
   // });
-  
-db.sequelize.sync({alter:true})
+  //sadasd
+db.sequelize.sync()
   .then(() => {
     console.log("Synced db.");
   })
