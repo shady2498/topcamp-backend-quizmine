@@ -22,12 +22,19 @@ db.sequelize = sequelize;
 db.user_auth = require("./userAuth.models.js")(sequelize, Sequelize);
 db.add_skill = require("./admin/addSkills.models.js")(sequelize, Sequelize);
 db.add_mcqs = require("./admin/addMcqs.models")(sequelize, Sequelize);
+db.user_results = require("./userResults.models")(sequelize, Sequelize);
+
 
 
 
 //associations
 db.add_skill.hasMany(db.add_mcqs, {foreignKey: "skill_id", onUpdate: 'RESTRICT'});
 db.add_mcqs.belongsTo(db.add_skill, {foreignKey: "skill_id", onUpdate: 'RESTRICT'});
+
+
+//associations results
+db.user_auth.hasMany(db.user_results, {foreignKey: "user_id", onUpdate: 'RESTRICT'});
+db.user_results.belongsTo(db.user_auth, {foreignKey: "user_id", onUpdate: 'RESTRICT'});
 
 
 

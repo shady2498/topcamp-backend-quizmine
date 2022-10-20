@@ -20,16 +20,16 @@ exports.addSkill = async (req, res) => {
       return res.status(400).send({error_code: -1, message: "Content can not be empty!"})
     }
 
-    // const {jwt_sign} = req.headers;
+    const {jwt_sign} = req.headers;
     const params = req.body;
 
-    // console.log("params",params, jwt_sign, JWT_SECRET)
+    console.log("params",params, jwt_sign, JWT_SECRET)
  
 
     try {
      
-        // const user = await jwt.verify(jwt_sign, JWT_SECRET);
-        // console.log("try", (user))
+        const user = await jwt.verify(jwt_sign, JWT_SECRET);
+        console.log("try", (user))
         const skill = await Skill.findOne({where: {class: params.class, subject: params.subject, chapter: params.chapter} })
     
         if(skill){

@@ -23,26 +23,31 @@ exports.addMcqs = async (req, res) => {
     }
 
     const {jwt_sign} = req.headers;
-    const params = req.body;
-    params.options = JSON.stringify(params.options)
+    const data = req.body;
+    data.options = JSON.stringify(data.options)
 
-    console.log("params",params);
+    console.log("data",data);
 
  
 
     try {
         const user = await jwt.verify(jwt_sign, JWT_SECRET);
 
-        const skill = await Skills.findOne({where: {class: params.class, subject: params.subject}, chapter: params.chapter})
+        const skill = await Skills.findOne({
+          where: {
+            class: data.class, 
+            subject: data.subject,
+            chapter: data.chapter,
+          }})
         console.log("skill", skill.id);
-        if(skill == null){
+        if(skill === null){
           res.send({error_code:-1, message: "Skill does not exist!"})
         }
         
-        params.skill_id = skill.id
-        console.log("params", params);
+        data.skill_id = skill.id
+        console.log("data", data);
 
-        Mcqs.create(params)
+        Mcqs.create(data)
         .then(data => {
             res.send({error_code: 0 , message: "Mcq Successfully added"});
         }).catch(err => {
@@ -67,20 +72,20 @@ exports.addMcqs = async (req, res) => {
   };
 
 exports.updateMcqs = async (req,res) => {
-    const id = parseInt(req.params.id);
-    const params = req.body;
+    const id = parseInt(req.data.id);
+    const data = req.body;
     // console.log("this is id", id, req.body);
 
-    const params_final = {
-      statement: params.statement,
-      options: JSON.stringify(params.options),
-      correct_option: params.correct_option,
+    const data_final = {
+      statement: data.statement,
+      options: JSON.stringify(data.options),
+      correct_option: data.correct_option,
     }
 
 const [results, metadata] = await sequelize.query("SELECT * from mcqs where id=2");
 
 
-    Mcqs.update(params_final, {
+    Mcqs.update(data_final, {
       where: { id: id }
     })
       .then(num => {
@@ -104,8 +109,8 @@ const [results, metadata] = await sequelize.query("SELECT * from mcqs where id=2
 
 
 exports.deleteMcq = (req, res) => {
-    const id = req.params.id;
-    const params = req.body
+    const id = req.data.id;
+    const data = req.body
   
     Mcqs.destroy({
       where: { id: id }
@@ -148,7 +153,7 @@ exports.deleteMcq = (req, res) => {
 
 
   exports.getMcq = (req, res) => {
-    const id = req.params.id;
+    const id = req.data.id;
 
     Mcqs.findByPk(id)
       .then(data => {
