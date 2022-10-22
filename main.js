@@ -38,6 +38,8 @@ require("./routes/user_auth.routes")(app);
 require("./routes/admin/skills.routes")(app);
 require("./routes/admin/mcqs.routes")(app);
 require("./routes/test/test.routes")(app);
+require("./routes/user.routes")(app);
+
 
 
 

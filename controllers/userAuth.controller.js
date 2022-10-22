@@ -5,8 +5,6 @@ const bcrypt  = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const SECRET = require("../data/global.data")
 
-//jwt
-// const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
 
 exports.registerUser = async (req, res) => {
 
@@ -55,13 +53,12 @@ exports.registerUser = async (req, res) => {
         return res.status(404).json({ error: "Sorry! There is no registered user with this email"})
     }
 
+    console.log("this is user", user.role)
     if(await bcrypt.compare(req.body.password, user.password)){
 
       const token = jwt.sign({
           id:user.id, 
-          first_name: user.first_name,
-          last_name: user.last_name,
-          email: user.email
+          role: user.role,
       }, SECRET)
       return res.json({error_code: 0, message: "Congratulations! User Successfully Logged in", data: {token: token, first_name: user.first_name,last_name: user.last_name, user_id: user.id}})
 

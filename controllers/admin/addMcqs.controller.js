@@ -5,16 +5,11 @@ const Mcqs = db.add_mcqs;
 const Skills = db.add_skill;
 const jwt = require("jsonwebtoken");
 const Op = db.Sequelize.Op;
-const { QueryTypes } = require('sequelize');
-const Sequelize = require('sequelize');
 const { sequelize } = require("../../models");
-//jwt
-const JWT_SECRET = 'jha8734hriygwe8rh3#@$#@dafaewiuh';
 
-// Create and Save a new skill
+
+
 exports.addMcqs = async (req, res) => {
-
-    console.log("this is skill data", req.body);
 
     let value = await helpers.isBodyPresent(req.body)
 
@@ -22,29 +17,16 @@ exports.addMcqs = async (req, res) => {
       return res.status(400).send({error_code: -1, message: "Content can not be empty!"})
     }
 
-    const {jwt_sign} = req.headers;
+
     const data = req.body;
     data.options = JSON.stringify(data.options)
 
-    console.log("data",data);
-
- 
-
     try {
-        const user = await jwt.verify(jwt_sign, JWT_SECRET);
 
-        const skill = await Skills.findOne({
-          where: {
-            class: data.class, 
-            subject: data.subject,
-            chapter: data.chapter,
-          }})
-        console.log("skill", skill.id);
-        if(skill === null){
-          res.send({error_code:-1, message: "Skill does not exist!"})
+        if(!data.skill_id){
+          return res.send({error_code:-1, message: "Skill does not exist!"})
         }
         
-        data.skill_id = skill.id
         console.log("data", data);
 
         Mcqs.create(data)
@@ -82,8 +64,6 @@ exports.updateMcqs = async (req,res) => {
       correct_option: data.correct_option,
     }
 
-const [results, metadata] = await sequelize.query("SELECT * from mcqs where id=2");
-
 
     Mcqs.update(data_final, {
       where: { id: id }
@@ -110,7 +90,7 @@ const [results, metadata] = await sequelize.query("SELECT * from mcqs where id=2
 
 exports.deleteMcq = (req, res) => {
     const id = req.data.id;
-    const data = req.body
+
   
     Mcqs.destroy({
       where: { id: id }
@@ -137,9 +117,8 @@ exports.deleteMcq = (req, res) => {
 
   exports.getAllMcqs = (req, res) => {
     const title = req.query.title;
-  var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
 
-  Mcqs.findAll({ where: condition })
+  Mcqs.findAll()
     .then(data => {
       res.send(data);
     })

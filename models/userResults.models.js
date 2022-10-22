@@ -7,6 +7,10 @@ module.exports = (sequelize, Sequelize) => {
       skill_id: {
         type: Sequelize.STRING,
         allowNull: false,
+      },
+      total_score:{
+        type: Sequelize.STRING,
+        allowNull: false,
       }
   
     });
