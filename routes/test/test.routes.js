@@ -7,7 +7,7 @@ module.exports = app => {
     var router = require("express").Router();
   
  
-    router.get("/setuptest", auth, user_test.setupTest);
+    router.post("/setuptest", auth, user_test.setupTest);
   
 
     router.post("/returnresult", user_test.result);
